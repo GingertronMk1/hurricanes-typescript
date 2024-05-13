@@ -34,7 +34,7 @@ class Player {
     wing?: number;
 
     constructor(name: string, middle: number, link: number, wing: number) {
-        this.name = name;
+        this.name = name.trim();
         if (isNaN(middle)) {
             middle = 2048;
         }
