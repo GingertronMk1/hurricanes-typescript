@@ -10,7 +10,7 @@
     "serve": "webpack serve",
     "build:dev": "webpack --mode=development",
     "build:prod": "webpack --mode=production --node-env=production",
-    "lint": "eslint -c .eslintrc.json ./**/*.ts",
+    "lint": "eslint -c .eslintrc.json ./**/*.{ts,js}",
     "lint:fix": "npm run lint -- --fix"
   },
   "author": "",
