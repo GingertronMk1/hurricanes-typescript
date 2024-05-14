@@ -21,10 +21,15 @@ fileInput.onchange = async function(e) {
         const file = fileInput.files[0];
         const fileText = await file.text();
         const parsedFile = Papa.parse<Array<string>>(fileText);
-        const playerData = parsedFile.data.map(rowToPlayer);
+        const playerData = parsedFile.data.map(Player.fromRow);
+        playerData.shift();
         console.table(playerData);
         pre.innerHTML = JSON.stringify(playerData, null, 2);
     }
+}
+
+enum Position {
+    WING, LINK, MIDDLE
 }
 
 class Player {
@@ -54,13 +59,21 @@ class Player {
             this.wing = wing;
         }
     }
-}
 
-function rowToPlayer(row: Array<string>): Player {
-    return new Player(
-        row[NAME_INDEX],
-        parseInt(row[MIDDLE_INDEX]),
-        parseInt(row[LINK_INDEX]),
-        parseInt(row[WING_INDEX]),
-    );
+    getPreference(position: Position): number {
+        switch (position) {
+            case Position.WING: return this.wing;
+            case Position.LINK: return this.link;
+            case Position.MIDDLE: return this.middle;
+        }
+    }
+
+    static fromRow(row: Array<string>): Player {
+        return new Player(
+            row[NAME_INDEX],
+            parseInt(row[MIDDLE_INDEX]),
+            parseInt(row[LINK_INDEX]),
+            parseInt(row[WING_INDEX]),
+        );
+    }
 }

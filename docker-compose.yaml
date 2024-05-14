@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  node:
+    platform: linux/x86_64
+    image: node:21
+    volumes:
+        - '.:/app:delegated'
+    ports:
+        - "80:80"
+    working_dir: /app
+    entrypoint: tail -f /dev/null
+
+networks:
+  the-integrated-theatre-system-network:
+    driver: bridge
+      
