@@ -1,0 +1,10 @@
+#positions-div {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    > div {
+        flex: 1;
+        min-width: 1px;
+    }
+}
