@@ -151,24 +151,28 @@ function showPlayerTable(
 
   tableHeader.appendChild(tableHeaderRow);
   table.appendChild(tableHeader);
+  table.classList.add("player-table");
 
   players.forEach(function (player, index) {
     const tableRow = document.createElement("tr");
     tableRow.setAttribute("data-player-index", index.toString());
+    tableRow.classList.add("player-table__row");
 
     const checkboxColumn = document.createElement("td");
 
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
     checkbox.checked = player.available;
-    checkbox.onchange = function (event) {
-      player.available = (<HTMLInputElement>event.currentTarget).checked;
-      showPlayerPositionPreferences(players, `#${POSITIONS_DIV_ID}`);
-    };
-
     checkboxColumn.appendChild(checkbox);
 
     tableRow.appendChild(checkboxColumn);
+
+    tableRow.onclick = function (event) {
+      player.available = !player.available;
+      showPlayerPositionPreferences(players, `#${POSITIONS_DIV_ID}`);
+      checkbox.checked = player.available;
+    };
+
 
     const nameColumn = document.createElement("td");
     nameColumn.innerText = player.name;
