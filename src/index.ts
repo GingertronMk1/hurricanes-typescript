@@ -2,10 +2,14 @@ import Papa from "papaparse";
 
 import "./app.scss";
 
+/**
+ * WING - LINK - MIDDLE
+ */
+
 const NAME_INDEX: number = 1;
-const MIDDLE_INDEX: number = 2;
+const WING_INDEX: number = 2;
 const LINK_INDEX: number = 3;
-const WING_INDEX: number = 4;
+const MIDDLE_INDEX: number = 4;
 
 const TABLE_DIV_ID: string = "table-div";
 const POSITIONS_DIV_ID: string = "positions-div";
@@ -58,12 +62,12 @@ function getAllPositions(): Array<Position> {
 
 class Player {
   name: string;
-  middle: number;
-  link: number;
   wing: number;
+  link: number;
+  middle: number;
   available: boolean;
 
-  constructor(name: string, middle: number, link: number, wing: number) {
+  constructor(name: string, wing: number, link: number, middle: number) {
     this.name = name.trim();
     if (isNaN(middle)) {
       middle = 2048;
@@ -101,9 +105,9 @@ class Player {
   static fromRow(row: Array<string>): Player {
     return new Player(
       row[NAME_INDEX],
-      parseInt(row[MIDDLE_INDEX]),
-      parseInt(row[LINK_INDEX]),
       parseInt(row[WING_INDEX]),
+      parseInt(row[LINK_INDEX]),
+      parseInt(row[MIDDLE_INDEX]),
     );
   }
 }
@@ -153,7 +157,7 @@ function showPlayerTable(
     checkbox.checked = player.available;
     checkbox.onchange = function (event) {
       player.available = (<HTMLInputElement>event.currentTarget).checked;
-      console.table(players);
+      showPlayerPositionPreferences(players, `#${POSITIONS_DIV_ID}`);
     };
 
     checkboxColumn.appendChild(checkbox);
@@ -191,7 +195,12 @@ function showPlayerPositionPreferences(
   documentItem.innerHTML = "";
 
   getAllPositions().forEach(function (position: Position) {
-    documentItem.appendChild(getPlayerPositionPreference(players, position));
+    documentItem.appendChild(
+      getPlayerPositionPreference(
+        players.filter(({ available }) => available),
+        position,
+      ),
+    );
   });
 }
 
@@ -207,13 +216,22 @@ function getPlayerPositionPreference(
 
   const positionTable = document.createElement("table");
   players
-    .sort((a, b) => a.getPreference(position) - b.getPreference(position))
+    .sort(function (a, b) {
+      const aPreference = a.getPreference(position);
+      const bPreference = b.getPreference(position);
+      if (aPreference !== bPreference) {
+        return aPreference - bPreference;
+      }
+      return a.name.localeCompare(b.name);
+    })
     .forEach(function (player) {
       const playerRow = document.createElement("tr");
       const playerNameCol = document.createElement("td");
+      playerNameCol.setAttribute("width", "50%");
       playerNameCol.innerText = player.name;
       playerRow.appendChild(playerNameCol);
       const playerPositionCol = document.createElement("td");
+      playerPositionCol.setAttribute("width", "50%");
       playerPositionCol.innerText = player.getPreference(position).toString();
       playerRow.appendChild(playerPositionCol);
       positionTable.appendChild(playerRow);
