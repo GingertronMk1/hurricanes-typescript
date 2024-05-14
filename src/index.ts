@@ -34,11 +34,11 @@ document.body.appendChild(positionsDiv);
 fileInput.focus();
 
 fileInput.onchange = async function () {
-  if (fileInput?.files?.length) {
+  if (fileInput.files?.length) {
     const file = fileInput.files[0];
     const fileText = await file.text();
     const parsedFile = Papa.parse<Array<string>>(fileText);
-    const playerData = parsedFile.data.map(Player.fromRow);
+    const playerData = parsedFile.data.map((row) => Player.fromRow(row));
     playerData.shift();
     showPlayerTable(playerData, `#${TABLE_DIV_ID}`);
     showPlayerPositionPreferences(playerData, `#${POSITIONS_DIV_ID}`);
@@ -110,13 +110,14 @@ class Player {
 
 function showPlayerTable(
   players: Array<Player>,
-  containingQuerySelector?: string,
+  containingQuerySelector: string,
 ): void {
-  if (containingQuerySelector === undefined) {
-    containingQuerySelector = "body";
+  const documentItem = document.querySelector(containingQuerySelector);
+  if (documentItem === null) {
+    return;
   }
 
-  document.querySelector(containingQuerySelector).innerHTML = "";
+  documentItem.innerHTML = "";
 
   const table = document.createElement("table");
 
@@ -173,23 +174,24 @@ function showPlayerTable(
     table.appendChild(tableRow);
   });
 
-  document.querySelector(containingQuerySelector).appendChild(table);
+  documentItem.appendChild(table);
 }
 
 function showPlayerPositionPreferences(
   players: Array<Player>,
-  containingQuerySelector?: string,
+  containingQuerySelector: string,
 ): void {
-  if (containingQuerySelector === undefined) {
-    containingQuerySelector = "body";
+  const documentItem = document.querySelector(containingQuerySelector);
+  if (documentItem === null) {
+    console.error(
+      `No element found that matches selector ${containingQuerySelector}`,
+    );
+    return;
   }
-
-  document.querySelector(containingQuerySelector).innerHTML = "";
+  documentItem.innerHTML = "";
 
   getAllPositions().forEach(function (position: Position) {
-    document
-      .querySelector(containingQuerySelector)
-      .appendChild(getPlayerPositionPreference(players, position));
+    documentItem.appendChild(getPlayerPositionPreference(players, position));
   });
 }
 
