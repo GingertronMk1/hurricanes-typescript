@@ -2,6 +2,7 @@
 
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const ESLintPlugin = require('eslint-webpack-plugin');
 
 const isProduction = process.env.NODE_ENV == 'production';
 
@@ -23,6 +24,9 @@ const config = {
     plugins: [
         new HtmlWebpackPlugin({
             template: 'index.html',
+        }),
+        new ESLintPlugin({
+            fix: true,
         }),
         // Add your plugins here
         // Learn more about plugins from https://webpack.js.org/configuration/plugins/

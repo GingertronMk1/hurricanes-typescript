@@ -61,6 +61,8 @@ function getAllPositions(): Array<Position> {
 }
 
 class Player {
+  DOES_NOT_WANT = 2048;
+
   name: string;
   wing: number;
   link: number;
@@ -70,13 +72,13 @@ class Player {
   constructor(name: string, wing: number, link: number, middle: number) {
     this.name = name.trim();
     if (isNaN(middle)) {
-      middle = 2048;
+      middle = this.DOES_NOT_WANT;
     }
     if (isNaN(link)) {
-      link = 2048;
+      link = this.DOES_NOT_WANT;
     }
     if (isNaN(wing)) {
-      wing = 2048;
+      wing = this.DOES_NOT_WANT;
     }
     if (middle === link && link === wing) {
       this.middle = 1;
@@ -100,6 +102,10 @@ class Player {
       case Position.MIDDLE:
         return this.middle;
     }
+  }
+
+  wantsToPlayPosition(position: Position): boolean {
+    return this.getPreference(position) < this.DOES_NOT_WANT;
   }
 
   static fromRow(row: Array<string>): Player {
@@ -197,7 +203,9 @@ function showPlayerPositionPreferences(
   getAllPositions().forEach(function (position: Position) {
     documentItem.appendChild(
       getPlayerPositionPreference(
-        players.filter(({ available }) => available),
+        players.filter(
+          (player) => player.available && player.wantsToPlayPosition(position),
+        ),
         position,
       ),
     );
