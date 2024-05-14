@@ -19,10 +19,8 @@
         ]
       }
     ],
-    "parser": "espree",
     "parserOptions": {
       "ecmaVersion": 12,
-      "sourceType": "module",
-      "project": ["./tsconfig.json"]
+      "sourceType": "module"
     }
   }
