@@ -24,3 +24,9 @@ table {
         width: 100%;
     }
 }
+
+.player-table {
+    &__row {
+        cursor: pointer;
+    }
+}
