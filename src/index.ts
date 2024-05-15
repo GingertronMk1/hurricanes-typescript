@@ -14,17 +14,6 @@ const MIDDLE_INDEX: number = 4;
 const TABLE_DIV_ID: string = "table-div";
 const POSITIONS_DIV_ID: string = "positions-div";
 
-const fileInput = document.createElement("input");
-fileInput.type = "file";
-fileInput.name = "file-input";
-fileInput.accept = ".csv";
-
-const pre = document.createElement("pre");
-pre.id = "output-pre";
-
-document.body.appendChild(fileInput);
-document.body.appendChild(pre);
-
 const tableDiv = document.createElement("div");
 tableDiv.id = TABLE_DIV_ID;
 
@@ -35,19 +24,15 @@ positionsDiv.id = POSITIONS_DIV_ID;
 
 document.body.appendChild(positionsDiv);
 
-fileInput.focus();
-
-fileInput.onchange = async function () {
-  if (fileInput.files?.length) {
-    const file = fileInput.files[0];
-    const fileText = await file.text();
+fetch("/positions.csv")
+  .then((response) => response.text())
+  .then(function (fileText) {
     const parsedFile = Papa.parse<Array<string>>(fileText);
     const playerData = parsedFile.data.map((row) => Player.fromRow(row));
     playerData.shift();
     showPlayerTable(playerData, `#${TABLE_DIV_ID}`);
     showPlayerPositionPreferences(playerData, `#${POSITIONS_DIV_ID}`);
-  }
-};
+});
 
 enum Position {
   WING = "Wing",

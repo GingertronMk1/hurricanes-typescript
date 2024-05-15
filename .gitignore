@@ -1,2 +1,5 @@
 /node_modules
-/build/*
+/dist
+
+# Will contain people's names and things
+/public/positions.csv
