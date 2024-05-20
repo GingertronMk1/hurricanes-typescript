@@ -1,4 +1,4 @@
 #!/usr/bin/env sh
 
 docker-compose up -d && \
-    docker-compose exec node npm run serve
+    ./bin/exec npm run serve
