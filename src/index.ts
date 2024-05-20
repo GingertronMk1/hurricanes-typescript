@@ -32,7 +32,10 @@ fetch("/positions.csv")
     playerData.shift();
     showPlayerTable(playerData, `#${TABLE_DIV_ID}`);
     showPlayerPositionPreferences(playerData, `#${POSITIONS_DIV_ID}`);
-});
+  })
+  .catch((error: unknown) => {
+    console.error(error);
+  });
 
 enum Position {
   WING = "Wing",
@@ -152,12 +155,11 @@ function showPlayerTable(
 
     tableRow.appendChild(checkboxColumn);
 
-    tableRow.onclick = function (event) {
+    tableRow.onclick = function () {
       player.available = !player.available;
       showPlayerPositionPreferences(players, `#${POSITIONS_DIV_ID}`);
       checkbox.checked = player.available;
     };
-
 
     const nameColumn = document.createElement("td");
     nameColumn.innerText = player.name;
