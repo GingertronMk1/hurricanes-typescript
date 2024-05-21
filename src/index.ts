@@ -17,12 +17,12 @@ const POSITIONS_DIV_ID: string = "positions-div";
 const tableDiv = document.createElement("div");
 tableDiv.id = TABLE_DIV_ID;
 
-document.body.appendChild(tableDiv);
+getContainer().appendChild(tableDiv);
 
 const positionsDiv = document.createElement("div");
 positionsDiv.id = POSITIONS_DIV_ID;
 
-document.body.appendChild(positionsDiv);
+getContainer().appendChild(positionsDiv);
 
 fetch("/positions.csv")
   .then((response) => response.text())
@@ -237,4 +237,12 @@ function getPlayerPositionPreference(
     });
   positionDiv.appendChild(positionTable);
   return positionDiv;
+}
+
+function getContainer(): HTMLElement {
+  const container = document.getElementById("container");
+  if (!container) {
+    throw new Error("No container defined");
+  }
+  return container;
 }
